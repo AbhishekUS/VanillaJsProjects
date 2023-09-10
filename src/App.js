@@ -1,9 +1,12 @@
 import { useState } from "react";
-
+// eslint-disable-next-line no-lone-blocks
+{
+  /*
 const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
   { id: 2, description: "Socks", quantity: 12, packed: true },
-];
+];*/
+}
 export default function App() {
   const [items, setItems] = useState([]);
 
@@ -11,11 +14,28 @@ export default function App() {
     setItems((items) => [...items, item]);
   }
 
+  function handleDeleteItems(id) {
+    console.log(id);
+    setItems((item) => item.filter((item) => item.id !== id));
+  }
+
+  function handleToggleItem(id) {
+    setItems((item) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <Packinglist items={items} />
+      <Packinglist
+        items={items}
+        onDeleteItem={handleDeleteItems}
+        onToggleItems={handleToggleItem}
+      />
       <Stats />
     </div>
   );
@@ -63,12 +83,17 @@ function Form({ onAddItems }) {
   );
 }
 
-function Packinglist({ items }) {
+function Packinglist({ items, onDeleteItem, onToggleItems }) {
   return (
     <div className="list">
       <ul className="list">
         {items.map((item) => (
-          <Item item={item} key={item.id} />
+          <Item
+            item={item}
+            key={item.id}
+            onDeleteItem={onDeleteItem}
+            onToggleItems={onToggleItems}
+          />
         ))}
         {/*{initialItems.map((item) => (
           <Item item={item} key={item.id} />
@@ -78,11 +103,16 @@ function Packinglist({ items }) {
   );
 }
 
-function Item({ item }) {
+function Item({ item, onDeleteItem, onToggleItems }) {
   return (
     <li>
+      <input
+        type="checkbox"
+        value={item.packed}
+        onChange={() => onToggleItems(item.id)}
+      />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        <button>❌</button>
+        <button onClick={() => onDeleteItem(item.id)}>❌</button>
         {""} {item.quantity} {item.description}
       </span>
     </li>
@@ -135,5 +165,24 @@ function myVehicle({type, color, brand, model}) {
    - After generating the array of numbers from 1 to 20, the `.map()` function is used to transform each element of the array.
    - Here, each number (`num`) is transformed into an HTML `<option>` element with the value and text both set to the current number.
 
-So, in summary, `(_, i)` is used to destructure the parameters of the callback function provided to `Array.from()`. The underscore (`_`) indicates that the value parameter is not being used within the callback function, and `i` represents the index of the current element being processed. The code generates an array of numbers from 1 to 20 and maps each number to an HTML `<option>` element within a `<select>` element.*/
+So, in summary, `(_, i)` is used to destructure the parameters of the callback function provided to `Array.from()`. The underscore (`_`) indicates that the value parameter is not being 
+used within the callback function, and `i` represents the index of the current element being processed. The code generates an array of numbers from 1 to 20 and maps each number to an 
+HTML `<option>` element within a `<select>` element.*/
+}
+// eslint-disable-next-line no-lone-blocks
+{
+  /*The `...items` syntax is called the "spread operator" in JavaScript. It's used to create a shallow copy of an array or object. In the context of your code, `...items` is used to create a 
+  copy of the current `items` array before appending a new item to it.
+
+Here's how it works:
+
+1. `items` is the current state variable that holds an array of items.
+
+2. `...items` takes the contents of the `items` array and spreads them into a new array. This new array contains all the elements from the `items` array.
+
+3. `[...items, item]` is an array literal that combines the spread items with the `item` parameter. This effectively creates a new array that contains all the items from the original 
+`items` array and adds the new `item` to the end of the array.
+
+So, the purpose of `...items` in the code is to ensure that the original `items` array remains unchanged. It creates a new array with the existing items and adds the new item to that new 
+array. This new array is then used to update the state with the updated list of items while preserving the immutability of the original state.*/
 }
