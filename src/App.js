@@ -36,7 +36,7 @@ export default function App() {
         onDeleteItem={handleDeleteItems}
         onToggleItems={handleToggleItem}
       />
-      <Stats />
+      <Stats items={items} />
     </div>
   );
 }
@@ -118,10 +118,24 @@ function Item({ item, onDeleteItem, onToggleItems }) {
     </li>
   );
 }
-function Stats() {
+function Stats({ items }) {
+  if (!items.length)
+    return (
+      <p className="stafts">
+        <em>Start adding some items to your packing list🚀</em>
+      </p>
+    );
+  const numItems = items.length;
+  const numPacked = items.filter((item) => item.packed).length;
+  const percentage = Math.round((numPacked / numItems) * 100);
   return (
     <footer className="stats">
-      <em>🥽You have X items on your list, and you already packed X (X%)</em>
+      <em>
+        {percentage === 100
+          ? "You got everything! Ready to go ✈"
+          : `🥽You have ${numItems} items on your list, and you already packed
+        ${numPacked} (${percentage}%)`}
+      </em>
     </footer>
   );
 }
@@ -178,11 +192,49 @@ Here's how it works:
 
 1. `items` is the current state variable that holds an array of items.
 
-2. `...items` takes the contents of the `items` array and spreads them into a new array. This new array contains all the elements from the `items` array.
+2. `...items` takes the contents of the `items` array and spreads them into a new 
+array. This new array contains all the elements from the `items` array.
 
-3. `[...items, item]` is an array literal that combines the spread items with the `item` parameter. This effectively creates a new array that contains all the items from the original 
+3. `[...items, item]` is an array literal that combines the spread items with the 
+`item` parameter. This effectively creates a new array that contains all the items from the original 
 `items` array and adds the new `item` to the end of the array.
 
-So, the purpose of `...items` in the code is to ensure that the original `items` array remains unchanged. It creates a new array with the existing items and adds the new item to that new 
-array. This new array is then used to update the state with the updated list of items while preserving the immutability of the original state.*/
+So, the purpose of `...items` in the code is to ensure that the original `items` 
+array remains unchanged. It creates a new array with the existing items and adds 
+the new item to that new 
+array. This new array is then used to update the state with the updated list of 
+items while preserving the immutability of the original state.
+I apologize for the confusion in my previous response. It seems I made a mistake in my explanation. Let me clarify what this code does:
+
+```javascript
+setItems((item) =>
+  items.map((item) =>
+    item.id === id ? { ...item, packed: !item.packed } : item
+  )
+);
+```
+
+This code is using the `setItems` function, which is likely a state updater function from the React `useState` hook. It is used to update the state variable `items`.
+
+The function provided to `setItems` is using `items.map` to create a new array where the `packed` property of an item with a specific `id` is toggled.
+
+Here's a step-by-step explanation:
+
+1. `setItems((item) => ... )`: This is calling `setItems` with a callback function. The parameter `item` is a placeholder and not used in the function.
+
+2. `items.map((item) => ... )`: This is using the `map` function on the `items` array, which presumably contains a list of items.
+
+3. `(item.id === id ? { ...item, packed: !item.packed } : item)`: This is a ternary operator that checks if the `id` of the current item matches the `id` passed as an argument to the function.
+
+   - If the condition is true (meaning the current item has the same `id` as the one we want to toggle), it creates a new object using the spread operator `{ ...item }` to clone all the properties of the current item. It then toggles the value of `packed` using `!item.packed`.
+
+   - If the condition is false (meaning the current item's `id` does not match the one we want to toggle), it simply returns the current item unchanged.
+
+The result is a new array where:
+
+- The item with the specified `id` has its `packed` property toggled.
+- All other items remain unchanged.
+
+This new array is then used to update the state of `items`.
+*/
 }
